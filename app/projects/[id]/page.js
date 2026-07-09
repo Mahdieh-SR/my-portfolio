@@ -1,15 +1,30 @@
 // app/projects/[id]/page.js
 'use client';
 
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { projects } from '@/data/projects';
 import { projectDetailContent } from '@/data/content';
 
+function ProjectHeroImage({ src, alt }) {
+  const [error, setError] = useState(false);
+
+  if (!src || error) {
+    return (
+      <div className="hero-image">
+        <span className="material-symbols-outlined">image</span>
+      </div>
+    );
+  }
+
+  return <img src={src} alt={alt} onError={() => setError(true)} className="hero-img" />;
+}
+
 export default function ProjectDetailPage() {
   const params = useParams();
   const project = projects.find(p => p.id === params.id);
-  const { notFound, backLink, infoLabels, sections, links, navigation } = projectDetailContent;
+  const { notFound, backLink, infoLabels, sections, navigation } = projectDetailContent;
 
   if (!project) {
     return (
@@ -68,9 +83,7 @@ export default function ProjectDetailPage() {
       {/* Hero Section */}
       <section className="project-hero">
         <div className="hero-background">
-          <div className="hero-image">
-            <span className="material-symbols-outlined">image</span>
-          </div>
+          <ProjectHeroImage src={project.images?.[0]} alt={project.title} />
           <div className="hero-overlay"></div>
         </div>
 
@@ -127,6 +140,18 @@ export default function ProjectDetailPage() {
           <p className="body-large description-text">{project.description}</p>
         </section>
 
+        {/* Gallery */}
+        {project.images && project.images.length > 1 && (
+          <section className="project-section">
+            <h2 className="headline-large">{sections.gallery}</h2>
+            <div className="gallery-grid">
+              {project.images.map((src, index) => (
+                <img key={index} src={src} alt={`${project.title} ${index + 1}`} className="gallery-img" />
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Technologies */}
         <section className="project-section">
           <h2 className="headline-large">{sections.technologies}</h2>
@@ -161,7 +186,7 @@ export default function ProjectDetailPage() {
               <div className="challenges-list">
                 {project.challenges.map((challenge, index) => (
                   <div key={index} className="challenge-item">
-                    <span className="material-symbols-outlined">warning</span>
+                    <span className="material-symbols-outlined">extension</span>
                     <span className="body-medium">{challenge}</span>
                   </div>
                 ))}
@@ -183,27 +208,6 @@ export default function ProjectDetailPage() {
             </section>
           )}
         </div>
-
-        {/* Links */}
-        {(project.liveUrl || project.githubUrl) && (
-          <section className="project-section">
-            <h2 className="headline-large">{sections.links}</h2>
-            <div className="project-links">
-              {project.liveUrl && (
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="project-link primary">
-                  <span className="material-symbols-outlined">launch</span>
-                  {links.live}
-                </a>
-              )}
-              {project.githubUrl && (
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="project-link secondary">
-                  <span className="material-symbols-outlined">code</span>
-                  {links.github}
-                </a>
-              )}
-            </div>
-          </section>
-        )}
 
         {/* Navigation */}
         <div className="project-navigation">
@@ -232,6 +236,7 @@ export default function ProjectDetailPage() {
         }
 
         .hero-image .material-symbols-outlined { font-size: 120px; color: rgba(255,255,255,0.3); }
+        .hero-img { width: 100%; height: 100%; object-fit: cover; }
 
         .hero-overlay {
           position: absolute; inset: 0;
@@ -299,6 +304,9 @@ export default function ProjectDetailPage() {
 
         .description-text { color: var(--md-sys-color-on-surface-variant); line-height: 1.8; margin: 0; }
 
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+        .gallery-img { width: 100%; height: 220px; object-fit: cover; border-radius: 16px; border: 2px solid var(--md-sys-color-outline-variant); }
+
         .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 
         .tech-item {
@@ -340,34 +348,9 @@ export default function ProjectDetailPage() {
           border: 1px solid var(--md-sys-color-outline-variant);
         }
 
-        .challenge-item .material-symbols-outlined { color: var(--md-sys-color-error); font-size: 22px; flex-shrink: 0; }
+        .challenge-item .material-symbols-outlined { color: var(--md-sys-color-secondary); font-size: 22px; flex-shrink: 0; }
         .result-item .material-symbols-outlined { color: var(--md-sys-color-tertiary); font-size: 22px; flex-shrink: 0; }
         .challenge-item span:last-child, .result-item span:last-child { color: var(--md-sys-color-on-surface-variant); line-height: 1.6; }
-
-        .project-links { display: flex; gap: 16px; flex-wrap: wrap; }
-
-        .project-link {
-          display: inline-flex; align-items: center; gap: 8px;
-          padding: 16px 32px; border-radius: 50px;
-          font-family: 'Vazirmatn', sans-serif; font-size: 16px; font-weight: 600;
-          text-decoration: none; transition: all 0.3s ease;
-        }
-
-        .project-link.primary {
-          background: var(--md-sys-color-primary);
-          color: var(--md-sys-color-on-primary);
-          box-shadow: var(--md-sys-elevation-2);
-        }
-
-        .project-link.primary:hover { box-shadow: var(--md-sys-elevation-4); transform: translateY(-4px); }
-
-        .project-link.secondary {
-          background: var(--md-sys-color-secondary-container);
-          color: var(--md-sys-color-on-secondary-container);
-          border: 2px solid var(--md-sys-color-outline);
-        }
-
-        .project-link.secondary:hover { box-shadow: var(--md-sys-elevation-2); border-color: var(--md-sys-color-primary); }
 
         .project-navigation {
           display: flex; justify-content: space-between; gap: 20px;
@@ -411,8 +394,6 @@ export default function ProjectDetailPage() {
           .project-container { padding: 0 20px 60px; }
           .info-cards { grid-template-columns: 1fr; }
           .tech-grid { grid-template-columns: 1fr; }
-          .project-links { flex-direction: column; }
-          .project-link { width: 100%; justify-content: center; }
           .project-navigation { flex-direction: column; }
           .nav-link { width: 100%; justify-content: center; }
         }

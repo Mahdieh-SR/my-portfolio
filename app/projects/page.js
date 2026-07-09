@@ -6,6 +6,20 @@ import Link from 'next/link';
 import { projects, categories } from '@/data/projects';
 import { projectsContent } from '@/data/content';
 
+function ProjectImage({ src, alt }) {
+  const [error, setError] = useState(false);
+
+  if (!src || error) {
+    return (
+      <div className="image-placeholder">
+        <span className="material-symbols-outlined">image</span>
+      </div>
+    );
+  }
+
+  return <img src={src} alt={alt} onError={() => setError(true)} className="project-img" />;
+}
+
 export default function ProjectsPage() {
   const [filter, setFilter] = useState('همه');
   const { hero, filter: filterContent, card, emptyState } = projectsContent;
@@ -54,9 +68,7 @@ export default function ProjectsPage() {
               <Link href={`/projects/${project.id}`} key={project.id} className="project-card"
                 style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="card-image">
-                  <div className="image-placeholder">
-                    <span className="material-symbols-outlined">image</span>
-                  </div>
+                  <ProjectImage src={project.images?.[0]} alt={project.title} />
                   <div className="card-overlay">
                     <span className="view-project">
                       <span className="material-symbols-outlined">visibility</span>
@@ -206,6 +218,8 @@ export default function ProjectsPage() {
         }
 
         .image-placeholder .material-symbols-outlined { font-size: 80px; color: var(--md-sys-color-on-primary-container); opacity: 0.5; }
+
+        .project-img { width: 100%; height: 100%; object-fit: cover; }
 
         .card-overlay {
           position: absolute; inset: 0;

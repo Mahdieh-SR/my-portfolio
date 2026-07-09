@@ -245,15 +245,11 @@ export const projectDetailContent = {
   },
   sections: {
     about:        'درباره پروژه',
+    gallery:      'تصاویر پروژه',
     technologies: 'تکنولوژی‌های استفاده شده',
     features:     'ویژگی‌های کلیدی',
     challenges:   'چالش‌ها',
     results:      'نتایج',
-    links:        'لینک‌های پروژه',
-  },
-  links: {
-    live:   'مشاهده پروژه آنلاین',
-    github: 'مشاهده کد در GitHub',
   },
   navigation: {
     allProjects:    'همه پروژه‌ها',
