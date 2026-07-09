@@ -265,7 +265,7 @@ export default function ContactPage() {
         .textarea-wrapper .material-symbols-outlined { top: 16px; }
 
         .form-input {
-          width: 100%; padding: 16px 16px 16px 48px;
+          width: 100%; padding: 16px 48px 16px 16px;
           background: var(--md-sys-color-surface-variant);
           border: 2px solid transparent; border-radius: 12px;
           color: var(--md-sys-color-on-surface);

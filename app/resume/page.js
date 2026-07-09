@@ -190,7 +190,7 @@ export default function ResumePage() {
         </section>
 
         {/* Languages & Certifications */}
-        <div className="two-column-section">
+        <div className={`two-column-section${certifications.length === 0 ? ' single-column' : ''}`}>
           <section className="resume-section">
             <div className="section-title-wrapper">
               <span className="material-symbols-outlined">language</span>
@@ -212,54 +212,58 @@ export default function ResumePage() {
             </div>
           </section>
 
-          <section className="resume-section">
-            <div className="section-title-wrapper">
-              <span className="material-symbols-outlined">workspace_premium</span>
-              <h2 className="headline-large">{sections.certifications}</h2>
-            </div>
+          {certifications.length > 0 && (
+            <section className="resume-section">
+              <div className="section-title-wrapper">
+                <span className="material-symbols-outlined">workspace_premium</span>
+                <h2 className="headline-large">{sections.certifications}</h2>
+              </div>
 
-            <div className="certifications-list">
-              {certifications.map((cert, index) => (
-                <div key={index} className="cert-item">
-                  <span className="material-symbols-outlined">verified</span>
-                  <div className="cert-content">
-                    <h4 className="title-medium">{cert.title}</h4>
-                    <div className="cert-meta">
-                      <span className="body-small">{cert.issuer}</span>
-                      <span className="separator">•</span>
-                      <span className="body-small">{cert.date}</span>
+              <div className="certifications-list">
+                {certifications.map((cert, index) => (
+                  <div key={index} className="cert-item">
+                    <span className="material-symbols-outlined">verified</span>
+                    <div className="cert-content">
+                      <h4 className="title-medium">{cert.title}</h4>
+                      <div className="cert-meta">
+                        <span className="body-small">{cert.issuer}</span>
+                        <span className="separator">•</span>
+                        <span className="body-small">{cert.date}</span>
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {/* Awards */}
+        {awards.length > 0 && (
+          <section className="resume-section">
+            <div className="section-title-wrapper">
+              <span className="material-symbols-outlined">emoji_events</span>
+              <h2 className="headline-large">{sections.awards}</h2>
+            </div>
+
+            <div className="awards-grid">
+              {awards.map((award, index) => (
+                <div key={index} className="award-card">
+                  <div className="award-icon">
+                    <span className="material-symbols-outlined">emoji_events</span>
+                  </div>
+                  <h3 className="title-large">{award.title}</h3>
+                  <div className="award-meta">
+                    <span className="body-medium">{award.issuer}</span>
+                    <span className="separator">•</span>
+                    <span className="body-medium">{award.date}</span>
+                  </div>
+                  <p className="body-medium">{award.description}</p>
                 </div>
               ))}
             </div>
           </section>
-        </div>
-
-        {/* Awards */}
-        <section className="resume-section">
-          <div className="section-title-wrapper">
-            <span className="material-symbols-outlined">emoji_events</span>
-            <h2 className="headline-large">{sections.awards}</h2>
-          </div>
-
-          <div className="awards-grid">
-            {awards.map((award, index) => (
-              <div key={index} className="award-card">
-                <div className="award-icon">
-                  <span className="material-symbols-outlined">emoji_events</span>
-                </div>
-                <h3 className="title-large">{award.title}</h3>
-                <div className="award-meta">
-                  <span className="body-medium">{award.issuer}</span>
-                  <span className="separator">•</span>
-                  <span className="body-medium">{award.date}</span>
-                </div>
-                <p className="body-medium">{award.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        )}
       </div>
 
       <style jsx>{`
@@ -421,6 +425,7 @@ export default function ResumePage() {
         }
 
         .two-column-section { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 80px; }
+        .two-column-section.single-column { grid-template-columns: 1fr; max-width: 600px; margin-left: auto; margin-right: auto; }
 
         .languages-list { display: flex; flex-direction: column; gap: 20px; }
 

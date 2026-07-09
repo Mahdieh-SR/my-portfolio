@@ -135,8 +135,9 @@ export const aboutContent = {
     sectionTitle: 'سفر من',
     sectionSubtitle: 'از شروع تا امروز',
     items: [
-      { title: 'شروع سفر برنامه‌نویسی',    description: 'آشنایی با HTML, CSS و JavaScript و شروع یادگیری توسعه وب'              },
-      { title: 'توسعه مهارت‌های Back-end', description: 'یادگیری Node.js و تبدیل شدن به توسعه‌دهنده Full Stack'                    },
+      { year: 'مهر ۱۴۰۴',      title: 'شروع مسیر برنامه‌نویسی',      description: 'با گذروندن یک دوره فشرده، پایه‌های HTML، CSS و JavaScript رو یاد گرفتم و خیلی زود با React آشنا شدم.' },
+      { year: 'زمستان ۱۴۰۴',   title: 'تسلط بر React و Next.js',    description: 'با تمرین مستمر روی پروژه‌های واقعی، مهارت‌هام رو در React، Next.js و TypeScript تقویت کردم و به سمت توسعه Full Stack با Node.js حرکت کردم.' },
+      { year: '۱۴۰۵ - اکنون',  title: 'شروع فعالیت فریلنسری',        description: 'الان به‌صورت فریلنس روی پروژه‌های وب کار می‌کنم؛ از جمله همین وب‌سایت پورتفولیو و یک وب‌سایت قنادی که با Next.js توسعه دادم.' },
     ],
   },
   values: {
