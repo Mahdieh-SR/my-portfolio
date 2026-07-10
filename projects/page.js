@@ -219,7 +219,7 @@ export default function ProjectsPage() {
 
         .image-placeholder .material-symbols-outlined { font-size: 80px; color: var(--md-sys-color-on-primary-container); opacity: 0.5; }
 
-        .project-img { width: 100%; height: 100%; object-fit: cover; }
+        .project-img { width: 100%; height: 100%; object-fit: contain; }
 
         .card-overlay {
           position: absolute; inset: 0;

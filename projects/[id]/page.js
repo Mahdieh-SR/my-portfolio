@@ -7,20 +7,6 @@ import Link from 'next/link';
 import { projects } from '@/data/projects';
 import { projectDetailContent } from '@/data/content';
 
-function ProjectHeroImage({ src, alt }) {
-  const [error, setError] = useState(false);
-
-  if (!src || error) {
-    return (
-      <div className="hero-image">
-        <span className="material-symbols-outlined">image</span>
-      </div>
-    );
-  }
-
-  return <img src={src} alt={alt} onError={() => setError(true)} className="hero-img" />;
-}
-
 export default function ProjectDetailPage() {
   const params = useParams();
   const project = projects.find(p => p.id === params.id);
@@ -88,12 +74,6 @@ export default function ProjectDetailPage() {
             <span className="material-symbols-outlined">arrow_forward</span>
             {backLink}
           </Link>
-        </div>
-
-        <div className="container">
-          <div className="hero-image-wrap">
-            <ProjectHeroImage src={project.images?.[0]} alt={project.title} />
-          </div>
         </div>
 
         <div className="container hero-content">
@@ -255,23 +235,6 @@ export default function ProjectDetailPage() {
 
         .back-link:hover { background: var(--md-sys-color-secondary-container); transform: translateX(4px); }
 
-        .hero-image-wrap {
-          width: 100%; height: 420px;
-          background: var(--md-sys-color-surface-variant);
-          border-radius: 24px; overflow: hidden;
-          display: flex; align-items: center; justify-content: center;
-          margin-bottom: 32px;
-        }
-
-        .hero-image {
-          width: 100%; height: 100%;
-          background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-tertiary) 100%);
-          display: flex; align-items: center; justify-content: center;
-        }
-
-        .hero-image .material-symbols-outlined { font-size: 120px; color: rgba(255,255,255,0.3); }
-        .hero-img { width: 100%; height: 100%; object-fit: contain; }
-
         .hero-text { animation: fadeInUp 0.8s ease-out; }
 
         .category-badge {
@@ -421,7 +384,6 @@ export default function ProjectDetailPage() {
 
         @media (max-width: 768px) {
           .project-hero { padding-top: 100px; margin-bottom: 40px; }
-          .hero-image-wrap { height: 260px; }
           .project-container { padding: 0 20px 60px; }
           .info-cards { grid-template-columns: 1fr; }
           .tech-grid { grid-template-columns: 1fr; }
