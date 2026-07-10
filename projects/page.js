@@ -209,7 +209,7 @@ export default function ProjectsPage() {
 
         .project-card:hover { border-color: var(--md-sys-color-primary); box-shadow: var(--md-sys-elevation-4); transform: translateY(-12px); }
 
-        .card-image { position: relative; width: 100%; height: 240px; overflow: hidden; background: var(--md-sys-color-surface-variant); }
+        .card-image { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; background: var(--md-sys-color-surface-variant); }
 
         .image-placeholder {
           width: 100%; height: 100%;

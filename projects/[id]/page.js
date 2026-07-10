@@ -11,7 +11,7 @@ export default function ProjectDetailPage() {
   const params = useParams();
   const project = projects.find(p => p.id === params.id);
   const { notFound, backLink, infoLabels, sections, navigation } = projectDetailContent;
-  const [lightboxSrc, setLightboxSrc] = useState(null);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   if (!project) {
     return (
@@ -130,7 +130,7 @@ export default function ProjectDetailPage() {
             <h2 className="headline-large">{sections.gallery}</h2>
             <div className="gallery-grid">
               {project.images.map((src, index) => (
-                <button key={index} type="button" className="gallery-img-btn" onClick={() => setLightboxSrc(src)}>
+                <button key={index} type="button" className="gallery-img-btn" onClick={() => setLightboxIndex(index)}>
                   <img src={src} alt={`${project.title} ${index + 1}`} className="gallery-img" />
                 </button>
               ))}
@@ -208,12 +208,35 @@ export default function ProjectDetailPage() {
         </div>
       </div>
 
-      {lightboxSrc && (
-        <div className="lightbox" onClick={() => setLightboxSrc(null)}>
-          <button type="button" className="lightbox-close" onClick={() => setLightboxSrc(null)} aria-label="بستن">
+      {lightboxIndex !== null && (
+        <div className="lightbox" onClick={() => setLightboxIndex(null)}>
+          <button type="button" className="lightbox-close" onClick={() => setLightboxIndex(null)} aria-label="بستن">
             <span className="material-symbols-outlined">close</span>
           </button>
-          <img src={lightboxSrc} alt={project.title} className="lightbox-img" onClick={(e) => e.stopPropagation()} />
+
+          {project.images.length > 1 && (
+            <button
+              type="button"
+              className="lightbox-nav lightbox-prev"
+              aria-label="عکس قبلی"
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => (i - 1 + project.images.length) % project.images.length); }}
+            >
+              <span className="material-symbols-outlined">chevron_right</span>
+            </button>
+          )}
+
+          <img src={project.images[lightboxIndex]} alt={project.title} className="lightbox-img" onClick={(e) => e.stopPropagation()} />
+
+          {project.images.length > 1 && (
+            <button
+              type="button"
+              className="lightbox-nav lightbox-next"
+              aria-label="عکس بعدی"
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => (i + 1) % project.images.length); }}
+            >
+              <span className="material-symbols-outlined">chevron_left</span>
+            </button>
+          )}
         </div>
       )}
 
@@ -300,6 +323,18 @@ export default function ProjectDetailPage() {
           cursor: pointer; transition: background 0.3s ease;
         }
         .lightbox-close:hover { background: rgba(255,255,255,0.3); }
+
+        .lightbox-nav {
+          position: absolute; top: 50%; transform: translateY(-50%);
+          width: 56px; height: 56px; border-radius: 50%;
+          background: rgba(255,255,255,0.15); border: none; color: white;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; transition: background 0.3s ease; z-index: 1;
+        }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+        .lightbox-nav .material-symbols-outlined { font-size: 32px; }
+        .lightbox-prev { right: 24px; }
+        .lightbox-next { left: 24px; }
 
         .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 
