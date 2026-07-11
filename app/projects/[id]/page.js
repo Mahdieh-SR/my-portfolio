@@ -7,24 +7,11 @@ import Link from 'next/link';
 import { projects } from '@/data/projects';
 import { projectDetailContent } from '@/data/content';
 
-function ProjectHeroImage({ src, alt }) {
-  const [error, setError] = useState(false);
-
-  if (!src || error) {
-    return (
-      <div className="hero-image">
-        <span className="material-symbols-outlined">image</span>
-      </div>
-    );
-  }
-
-  return <img src={src} alt={alt} onError={() => setError(true)} className="hero-img" />;
-}
-
 export default function ProjectDetailPage() {
   const params = useParams();
   const project = projects.find(p => p.id === params.id);
   const { notFound, backLink, infoLabels, sections, navigation } = projectDetailContent;
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   if (!project) {
     return (
@@ -82,17 +69,14 @@ export default function ProjectDetailPage() {
     <div className="project-detail">
       {/* Hero Section */}
       <section className="project-hero">
-        <div className="hero-background">
-          <ProjectHeroImage src={project.images?.[0]} alt={project.title} />
-          <div className="hero-overlay"></div>
-        </div>
-
-        <div className="container hero-content">
+        <div className="container hero-top">
           <Link href="/projects" className="back-link">
             <span className="material-symbols-outlined">arrow_forward</span>
             {backLink}
           </Link>
+        </div>
 
+        <div className="container hero-content">
           <div className="hero-text">
             <span className="category-badge">{project.category}</span>
             <h1 className="display-large">{project.title}</h1>
@@ -146,7 +130,9 @@ export default function ProjectDetailPage() {
             <h2 className="headline-large">{sections.gallery}</h2>
             <div className="gallery-grid">
               {project.images.map((src, index) => (
-                <img key={index} src={src} alt={`${project.title} ${index + 1}`} className="gallery-img" />
+                <button key={index} type="button" className="gallery-img-btn" onClick={() => setLightboxIndex(index)}>
+                  <img src={src} alt={`${project.title} ${index + 1}`} className="gallery-img" />
+                </button>
               ))}
             </div>
           </section>
@@ -222,55 +208,68 @@ export default function ProjectDetailPage() {
         </div>
       </div>
 
+      {lightboxIndex !== null && (
+        <div className="lightbox" onClick={() => setLightboxIndex(null)}>
+          <button type="button" className="lightbox-close" onClick={() => setLightboxIndex(null)} aria-label="بستن">
+            <span className="material-symbols-outlined">close</span>
+          </button>
+
+          {project.images.length > 1 && (
+            <button
+              type="button"
+              className="lightbox-nav lightbox-prev"
+              aria-label="عکس قبلی"
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => (i - 1 + project.images.length) % project.images.length); }}
+            >
+              <span className="material-symbols-outlined">chevron_right</span>
+            </button>
+          )}
+
+          <img src={project.images[lightboxIndex]} alt={project.title} className="lightbox-img" onClick={(e) => e.stopPropagation()} />
+
+          {project.images.length > 1 && (
+            <button
+              type="button"
+              className="lightbox-nav lightbox-next"
+              aria-label="عکس بعدی"
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => (i + 1) % project.images.length); }}
+            >
+              <span className="material-symbols-outlined">chevron_left</span>
+            </button>
+          )}
+        </div>
+      )}
+
       <style jsx>{`
         .project-detail { min-height: 100vh; background: var(--md-sys-color-background); }
 
-        .project-hero { position: relative; height: 500px; margin-bottom: 80px; }
+        .project-hero { padding-top: 120px; margin-bottom: 60px; }
 
-        .hero-background { position: absolute; inset: 0; z-index: 0; }
-
-        .hero-image {
-          width: 100%; height: 100%;
-          background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-tertiary) 100%);
-          display: flex; align-items: center; justify-content: center;
-        }
-
-        .hero-image .material-symbols-outlined { font-size: 120px; color: rgba(255,255,255,0.3); }
-        .hero-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .hero-overlay {
-          position: absolute; inset: 0;
-          background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 100%);
-        }
-
-        .hero-content {
-          position: relative; z-index: 1; height: 100%;
-          display: flex; flex-direction: column; justify-content: space-between;
-          padding-top: 120px; padding-bottom: 60px;
-        }
+        .hero-top { padding-bottom: 24px; }
 
         .back-link {
           display: inline-flex; align-items: center; gap: 8px;
-          color: white;
+          color: var(--md-sys-color-on-surface-variant);
           font-family: 'Vazirmatn', sans-serif; font-size: 14px; font-weight: 600;
           text-decoration: none; padding: 10px 20px; border-radius: 50px;
-          background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
-          transition: all 0.3s ease; align-self: flex-start;
+          background: var(--md-sys-color-surface-variant);
+          transition: all 0.3s ease;
         }
 
-        .back-link:hover { background: rgba(255,255,255,0.25); transform: translateX(4px); }
+        .back-link:hover { background: var(--md-sys-color-secondary-container); transform: translateX(4px); }
 
         .hero-text { animation: fadeInUp 0.8s ease-out; }
 
         .category-badge {
           display: inline-block; padding: 8px 20px; border-radius: 50px;
-          background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
-          color: white; font-family: 'Vazirmatn', sans-serif;
+          background: var(--md-sys-color-secondary-container);
+          color: var(--md-sys-color-on-secondary-container);
+          font-family: 'Vazirmatn', sans-serif;
           font-size: 14px; font-weight: 700; margin-bottom: 20px;
         }
 
-        .hero-text h1 { color: white; margin: 0 0 16px; }
-        .hero-text p { color: rgba(255,255,255,0.95); max-width: 800px; margin: 0; }
+        .hero-text h1 { color: var(--md-sys-color-on-background); margin: 0 0 16px; }
+        .hero-text p { color: var(--md-sys-color-on-surface-variant); max-width: 800px; margin: 0; }
 
         .project-container { padding: 0 24px 80px; }
 
@@ -305,7 +304,37 @@ export default function ProjectDetailPage() {
         .description-text { color: var(--md-sys-color-on-surface-variant); line-height: 1.8; margin: 0; }
 
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-        .gallery-img { width: 100%; height: 220px; object-fit: cover; border-radius: 16px; border: 2px solid var(--md-sys-color-outline-variant); }
+        .gallery-img-btn { display: block; padding: 0; border: none; background: none; cursor: pointer; border-radius: 16px; }
+        .gallery-img { width: 100%; height: 220px; object-fit: contain; background: var(--md-sys-color-surface-variant); border-radius: 16px; border: 2px solid var(--md-sys-color-outline-variant); transition: all 0.3s ease; }
+        .gallery-img-btn:hover .gallery-img { border-color: var(--md-sys-color-primary); box-shadow: var(--md-sys-elevation-2); transform: translateY(-4px); }
+
+        .lightbox {
+          position: fixed; inset: 0; z-index: 1000;
+          background: rgba(0,0,0,0.85);
+          display: flex; align-items: center; justify-content: center;
+          padding: 40px; cursor: zoom-out;
+        }
+        .lightbox-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; cursor: default; }
+        .lightbox-close {
+          position: absolute; top: 24px; left: 24px;
+          width: 48px; height: 48px; border-radius: 50%;
+          background: rgba(255,255,255,0.15); border: none; color: white;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; transition: background 0.3s ease;
+        }
+        .lightbox-close:hover { background: rgba(255,255,255,0.3); }
+
+        .lightbox-nav {
+          position: absolute; top: 50%; transform: translateY(-50%);
+          width: 56px; height: 56px; border-radius: 50%;
+          background: rgba(255,255,255,0.15); border: none; color: white;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; transition: background 0.3s ease; z-index: 1;
+        }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+        .lightbox-nav .material-symbols-outlined { font-size: 32px; }
+        .lightbox-prev { right: 24px; }
+        .lightbox-next { left: 24px; }
 
         .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 
@@ -389,8 +418,7 @@ export default function ProjectDetailPage() {
         }
 
         @media (max-width: 768px) {
-          .project-hero { height: 400px; margin-bottom: 60px; }
-          .hero-content { padding-top: 100px; padding-bottom: 40px; }
+          .project-hero { padding-top: 100px; margin-bottom: 40px; }
           .project-container { padding: 0 20px 60px; }
           .info-cards { grid-template-columns: 1fr; }
           .tech-grid { grid-template-columns: 1fr; }

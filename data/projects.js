@@ -1,4 +1,4 @@
-// data/projects.js
+﻿// data/projects.js
 
 export const projects = [
   {
