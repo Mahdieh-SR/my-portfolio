@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { navbarContent } from '@/data/content';
+import { personalInfo } from '@/data/personal';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +14,8 @@ export default function Navbar() {
   const [visible, setVisible] = useState(true);
   const [lastScroll, setLastScroll] = useState(0);
   const pathname = usePathname();
+  const { language, toggleLanguage } = useLanguage();
+  const t = navbarContent[language];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,14 +41,14 @@ export default function Navbar() {
               <span className="material-symbols-outlined">terminal</span>
             </div>
             <div className="logo-texts">
-              <span className="logo-name">مهدیه صفری</span>
-              <span className="logo-role">توسعه‌دهنده وب</span>
+              <span className="logo-name">{personalInfo.name[language]}</span>
+              <span className="logo-role">{t.logoRole}</span>
             </div>
           </Link>
 
           {/* Desktop Menu */}
           <div className="desktop-menu">
-            {navbarContent.navItems.map((item) => (
+            {t.navItems.map((item) => (
               <Link
                 key={item.path}
                 href={item.path}
@@ -61,17 +65,21 @@ export default function Navbar() {
           <div className="navbar-end">
             <div className="availability-badge">
               <span className="availability-dot" />
-              آماده همکاری
+              {t.availabilityBadge}
             </div>
+            <button type="button" className="lang-switch" onClick={toggleLanguage} aria-label="Switch language">
+              <span className="material-symbols-outlined">language</span>
+              {t.langSwitchLabel}
+            </button>
             <Link href="/contact" className="navbar-cta">
               <span className="material-symbols-outlined">mail</span>
-              بیایید همکاری کنیم
+              {t.ctaText}
               <span className="cta-arrow">←</span>
             </Link>
             <button
               className="mobile-menu-btn"
               onClick={() => setIsOpen(!isOpen)}
-              aria-label="منوی موبایل"
+              aria-label={t.mobileMenuAriaLabel}
             >
               <div className={`hamburger ${isOpen ? 'open' : ''}`}>
                 <span /><span /><span />
@@ -83,7 +91,7 @@ export default function Navbar() {
         {/* Mobile Menu */}
         <div className={`mobile-menu ${isOpen ? 'open' : ''}`}>
           <div className="mobile-menu-inner">
-            {navbarContent.navItems.map((item) => (
+            {t.navItems.map((item) => (
               <Link
                 key={item.path}
                 href={item.path}
@@ -99,9 +107,15 @@ export default function Navbar() {
                 )}
               </Link>
             ))}
+            <button type="button" className="mobile-lang-switch" onClick={toggleLanguage}>
+              <div className="mobile-link-icon">
+                <span className="material-symbols-outlined">language</span>
+              </div>
+              <span>{language === 'fa' ? 'English' : 'فارسی'}</span>
+            </button>
             <Link href="/contact" className="mobile-cta" onClick={() => setIsOpen(false)}>
               <span className="material-symbols-outlined">mail</span>
-              بیایید همکاری کنیم
+              {t.ctaText}
             </Link>
           </div>
         </div>
@@ -205,6 +219,35 @@ export default function Navbar() {
           0%,100% { box-shadow: 0 0 0 3px rgba(34,197,94,0.25); }
           50%      { box-shadow: 0 0 0 6px rgba(34,197,94,0.1);  }
         }
+
+        /* ── Language Switch ── */
+        .lang-switch {
+          display: flex; align-items: center; gap: 6px;
+          padding: 8px 14px; border-radius: 50px;
+          background: var(--md-sys-color-surface-variant);
+          border: 1.5px solid var(--md-sys-color-outline-variant);
+          color: var(--md-sys-color-on-surface);
+          font-family: 'Vazirmatn', sans-serif;
+          font-size: 13px; font-weight: 700;
+          cursor: pointer; transition: all 0.25s ease;
+        }
+        .lang-switch:hover {
+          background: var(--md-sys-color-primary-container);
+          border-color: var(--md-sys-color-primary);
+          color: var(--md-sys-color-primary);
+        }
+        .lang-switch .material-symbols-outlined { font-size: 18px; }
+
+        .mobile-lang-switch {
+          display: flex; align-items: center; gap: 12px;
+          padding: 12px 16px; border-radius: 14px;
+          font-size: 15px; font-weight: 500;
+          color: var(--md-sys-color-on-surface);
+          background: none; border: none; cursor: pointer;
+          font-family: 'Vazirmatn', sans-serif;
+          text-align: right; transition: all 0.25s ease;
+        }
+        .mobile-lang-switch:hover { background: var(--md-sys-color-surface-variant); }
 
         /* دکمه CTA — اصل روانشناسی: urgency + action-oriented */
         .navbar-cta {

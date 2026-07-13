@@ -2,13 +2,16 @@
 'use client';
 
 import Link from 'next/link';
-import { footerContent } from '@/data/content';
+import { footerContent, footerContact } from '@/data/content';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { language } = useLanguage();
   const { brandTitle, brandDescription, quickLinksTitle, servicesTitle, contactTitle,
     copyrightSuffix, builtWith, builtWithTech, quickLinks, services,
-    contactEmail, contactPhone, contactPhoneRaw, contactLocation, socialLinks } = footerContent;
+    contactLocation, socialLinks } = footerContent[language];
+  const { contactEmail, contactPhone, contactPhoneRaw } = footerContact;
 
   return (
     <footer className="footer">

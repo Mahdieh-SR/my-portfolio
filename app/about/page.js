@@ -3,9 +3,11 @@
 
 import { personalInfo } from '@/data/personal';
 import { aboutContent } from '@/data/content';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function AboutPage() {
-  const { hero, sections, journey, values, cta } = aboutContent;
+  const { language } = useLanguage();
+  const { hero, sections, journey, values, cta } = aboutContent[language];
 
   return (
     <div className="about-page">

@@ -5,12 +5,15 @@ import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { projects } from '@/data/projects';
-import { projectDetailContent } from '@/data/content';
+import { projectDetailContent, projectsContent } from '@/data/content';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ProjectDetailPage() {
   const params = useParams();
   const project = projects.find(p => p.id === params.id);
-  const { notFound, backLink, infoLabels, sections, navigation } = projectDetailContent;
+  const { language } = useLanguage();
+  const { notFound, backLink, liveLink, lightbox, infoLabels, sections, navigation } = projectDetailContent[language];
+  const { categoryLabels } = projectsContent[language];
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   if (!project) {
@@ -78,9 +81,15 @@ export default function ProjectDetailPage() {
 
         <div className="container hero-content">
           <div className="hero-text">
-            <span className="category-badge">{project.category}</span>
-            <h1 className="display-large">{project.title}</h1>
-            <p className="headline-small">{project.shortDescription}</p>
+            <span className="category-badge">{categoryLabels[project.categoryKey]}</span>
+            <h1 className="display-large">{project[language].title}</h1>
+            <p className="headline-small">{project[language].shortDescription}</p>
+            {project.liveUrl && (
+              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn-live-link">
+                <span className="material-symbols-outlined">open_in_new</span>
+                {liveLink}
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -92,28 +101,28 @@ export default function ProjectDetailPage() {
             <span className="material-symbols-outlined">calendar_today</span>
             <div className="info-content">
               <span className="label-large">{infoLabels.date}</span>
-              <span className="body-large">{project.date}</span>
+              <span className="body-large">{project.date[language]}</span>
             </div>
           </div>
           <div className="info-card">
             <span className="material-symbols-outlined">timer</span>
             <div className="info-content">
               <span className="label-large">{infoLabels.duration}</span>
-              <span className="body-large">{project.duration}</span>
+              <span className="body-large">{project[language].duration}</span>
             </div>
           </div>
           <div className="info-card">
             <span className="material-symbols-outlined">person</span>
             <div className="info-content">
               <span className="label-large">{infoLabels.role}</span>
-              <span className="body-large">{project.role}</span>
+              <span className="body-large">{project[language].role}</span>
             </div>
           </div>
           <div className="info-card">
             <span className="material-symbols-outlined">business</span>
             <div className="info-content">
               <span className="label-large">{infoLabels.client}</span>
-              <span className="body-large">{project.client}</span>
+              <span className="body-large">{project[language].client}</span>
             </div>
           </div>
         </div>
@@ -121,7 +130,7 @@ export default function ProjectDetailPage() {
         {/* Description */}
         <section className="project-section">
           <h2 className="headline-large">{sections.about}</h2>
-          <p className="body-large description-text">{project.description}</p>
+          <p className="body-large description-text">{project[language].description}</p>
         </section>
 
         {/* Gallery */}
@@ -131,7 +140,7 @@ export default function ProjectDetailPage() {
             <div className="gallery-grid">
               {project.images.map((src, index) => (
                 <button key={index} type="button" className="gallery-img-btn" onClick={() => setLightboxIndex(index)}>
-                  <img src={src} alt={`${project.title} ${index + 1}`} className="gallery-img" />
+                  <img src={src} alt={`${project[language].title} ${index + 1}`} className="gallery-img" />
                 </button>
               ))}
             </div>
@@ -155,7 +164,7 @@ export default function ProjectDetailPage() {
         <section className="project-section">
           <h2 className="headline-large">{sections.features}</h2>
           <div className="features-grid">
-            {project.features.map((feature, index) => (
+            {project[language].features.map((feature, index) => (
               <div key={index} className="feature-card">
                 <span className="material-symbols-outlined">check_circle</span>
                 <span className="body-large">{feature}</span>
@@ -166,11 +175,11 @@ export default function ProjectDetailPage() {
 
         {/* Challenges & Results */}
         <div className="two-column-section">
-          {project.challenges && (
+          {project[language].challenges && (
             <section className="project-section">
               <h2 className="headline-large">{sections.challenges}</h2>
               <div className="challenges-list">
-                {project.challenges.map((challenge, index) => (
+                {project[language].challenges.map((challenge, index) => (
                   <div key={index} className="challenge-item">
                     <span className="material-symbols-outlined">extension</span>
                     <span className="body-medium">{challenge}</span>
@@ -180,11 +189,11 @@ export default function ProjectDetailPage() {
             </section>
           )}
 
-          {project.results && (
+          {project[language].results && (
             <section className="project-section">
               <h2 className="headline-large">{sections.results}</h2>
               <div className="results-list">
-                {project.results.map((result, index) => (
+                {project[language].results.map((result, index) => (
                   <div key={index} className="result-item">
                     <span className="material-symbols-outlined">trending_up</span>
                     <span className="body-medium">{result}</span>
@@ -210,7 +219,7 @@ export default function ProjectDetailPage() {
 
       {lightboxIndex !== null && (
         <div className="lightbox" onClick={() => setLightboxIndex(null)}>
-          <button type="button" className="lightbox-close" onClick={() => setLightboxIndex(null)} aria-label="بستن">
+          <button type="button" className="lightbox-close" onClick={() => setLightboxIndex(null)} aria-label={lightbox.close}>
             <span className="material-symbols-outlined">close</span>
           </button>
 
@@ -218,20 +227,20 @@ export default function ProjectDetailPage() {
             <button
               type="button"
               className="lightbox-nav lightbox-prev"
-              aria-label="عکس قبلی"
+              aria-label={lightbox.prev}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => (i - 1 + project.images.length) % project.images.length); }}
             >
               <span className="material-symbols-outlined">chevron_right</span>
             </button>
           )}
 
-          <img src={project.images[lightboxIndex]} alt={project.title} className="lightbox-img" onClick={(e) => e.stopPropagation()} />
+          <img src={project.images[lightboxIndex]} alt={project[language].title} className="lightbox-img" onClick={(e) => e.stopPropagation()} />
 
           {project.images.length > 1 && (
             <button
               type="button"
               className="lightbox-nav lightbox-next"
-              aria-label="عکس بعدی"
+              aria-label={lightbox.next}
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => (i + 1) % project.images.length); }}
             >
               <span className="material-symbols-outlined">chevron_left</span>
@@ -270,6 +279,18 @@ export default function ProjectDetailPage() {
 
         .hero-text h1 { color: var(--md-sys-color-on-background); margin: 0 0 16px; }
         .hero-text p { color: var(--md-sys-color-on-surface-variant); max-width: 800px; margin: 0; }
+
+        .btn-live-link {
+          display: inline-flex; align-items: center; gap: 8px;
+          margin-top: 24px; padding: 14px 28px; border-radius: 50px;
+          background: var(--md-sys-color-primary);
+          color: var(--md-sys-color-on-primary);
+          font-family: 'Vazirmatn', sans-serif; font-size: 15px; font-weight: 600;
+          box-shadow: var(--md-sys-elevation-2);
+          transition: all 0.3s ease;
+        }
+        .btn-live-link:hover { box-shadow: var(--md-sys-elevation-4); transform: translateY(-2px); }
+        .btn-live-link .material-symbols-outlined { font-size: 20px; }
 
         .project-container { padding: 0 24px 80px; }
 

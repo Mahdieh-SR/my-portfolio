@@ -3,8 +3,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { projects, categories } from '@/data/projects';
-import { projectsContent } from '@/data/content';
+import { projects } from '@/data/projects';
+import { projectsContent, categoryKeys } from '@/data/content';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 function ProjectImage({ src, alt }) {
   const [error, setError] = useState(false);
@@ -21,12 +22,13 @@ function ProjectImage({ src, alt }) {
 }
 
 export default function ProjectsPage() {
-  const [filter, setFilter] = useState('همه');
-  const { hero, filter: filterContent, card, emptyState } = projectsContent;
+  const [filter, setFilter] = useState('all');
+  const { language } = useLanguage();
+  const { hero, filter: filterContent, card, emptyState, categoryLabels } = projectsContent[language];
 
-  const filteredProjects = filter === 'همه'
+  const filteredProjects = filter === 'all'
     ? projects
-    : projects.filter(project => project.category === filter);
+    : projects.filter(project => project.categoryKey === filter);
 
   return (
     <div className="projects-page">
@@ -49,10 +51,10 @@ export default function ProjectsPage() {
             <span className="label-large">{filterContent.label}</span>
           </div>
           <div className="filter-chips">
-            {categories.map((category) => (
+            {categoryKeys.map((category) => (
               <button key={category} className={`filter-chip ${filter === category ? 'active' : ''}`}
                 onClick={() => setFilter(category)}>
-                {category}
+                {categoryLabels[category]}
               </button>
             ))}
           </div>
@@ -68,7 +70,7 @@ export default function ProjectsPage() {
               <Link href={`/projects/${project.id}`} key={project.id} className="project-card"
                 style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="card-image">
-                  <ProjectImage src={project.images?.[0]} alt={project.title} />
+                  <ProjectImage src={project.images?.[0]} alt={project[language].title} />
                   <div className="card-overlay">
                     <span className="view-project">
                       <span className="material-symbols-outlined">visibility</span>
@@ -79,20 +81,20 @@ export default function ProjectsPage() {
 
                 <div className="card-content">
                   <div className="card-header">
-                    <h3 className="title-large">{project.title}</h3>
-                    <span className="category-badge">{project.category}</span>
+                    <h3 className="title-large">{project[language].title}</h3>
+                    <span className="category-badge">{categoryLabels[project.categoryKey]}</span>
                   </div>
 
-                  <p className="body-medium description">{project.shortDescription}</p>
+                  <p className="body-medium description">{project[language].shortDescription}</p>
 
                   <div className="card-meta">
                     <div className="meta-item">
                       <span className="material-symbols-outlined">schedule</span>
-                      <span className="body-small">{project.date}</span>
+                      <span className="body-small">{project.date[language]}</span>
                     </div>
                     <div className="meta-item">
                       <span className="material-symbols-outlined">timer</span>
-                      <span className="body-small">{project.duration}</span>
+                      <span className="body-small">{project[language].duration}</span>
                     </div>
                   </div>
 
@@ -122,7 +124,7 @@ export default function ProjectsPage() {
             </div>
             <h3 className="headline-medium">{emptyState.title}</h3>
             <p className="body-large">{emptyState.subtitle}</p>
-            <button className="btn-reset" onClick={() => setFilter('همه')}>
+            <button className="btn-reset" onClick={() => setFilter('all')}>
               {emptyState.resetButton}
             </button>
           </div>
@@ -198,6 +200,7 @@ export default function ProjectsPage() {
 
         .project-card {
           display: flex; flex-direction: column;
+          min-width: 0;
           background: var(--md-sys-color-surface);
           border-radius: 24px;
           overflow: hidden;
@@ -209,7 +212,7 @@ export default function ProjectsPage() {
 
         .project-card:hover { border-color: var(--md-sys-color-primary); box-shadow: var(--md-sys-elevation-4); transform: translateY(-12px); }
 
-        .card-image { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; background: var(--md-sys-color-surface-variant); }
+        .card-image { position: relative; width: 100%; min-width: 0; aspect-ratio: 2.2 / 1; overflow: hidden; background: var(--md-sys-color-surface-variant); }
 
         .image-placeholder {
           width: 100%; height: 100%;

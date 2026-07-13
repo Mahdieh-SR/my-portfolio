@@ -4,9 +4,14 @@
 import Link from 'next/link';
 import { personalInfo } from '@/data/personal';
 import { homeContent } from '@/data/content';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function HomePage() {
-  const { hero, skills, features, cta } = homeContent;
+  const { language } = useLanguage();
+  const { hero, skills, features, cta } = homeContent[language];
+  const name = personalInfo.name[language];
+  const title = personalInfo.title[language];
+  const bio = personalInfo.bio[language];
 
   return (
     <div className="home-page">
@@ -27,17 +32,17 @@ export default function HomePage() {
               </div>
 
               <h1 className="display-large hero-title">
-                سلام، من{' '}
-                <span className="gradient-text">{personalInfo.name}</span>
-                {' '}هستم
+                {hero.greetingPrefix}{' '}
+                <span className="gradient-text">{name}</span>
+                {hero.greetingSuffix ? <>{' '}{hero.greetingSuffix}</> : null}
               </h1>
 
               <p className="headline-small hero-subtitle">
-                {personalInfo.title}
+                {title}
               </p>
 
               <p className="body-large hero-description">
-                {personalInfo.bio}
+                {bio}
               </p>
 
               <div className="skills-chips">
@@ -66,7 +71,7 @@ export default function HomePage() {
                 <div className="avatar-ring ring-1" />
                 <div className="avatar-ring ring-2" />
                 <div className="avatar-main">
-                  <span className="avatar-initial">م</span>
+                  <span className="avatar-initial">{language === 'fa' ? 'م' : 'M'}</span>
                 </div>
                 <div className="float-card card-1">
                   <span className="material-symbols-outlined">code</span>
@@ -78,7 +83,7 @@ export default function HomePage() {
                 </div>
                 <div className="float-card card-3">
                   <span className="material-symbols-outlined">psychology</span>
-                  <span>هوش مصنوعی</span>
+                  <span>{hero.aiLabel}</span>
                 </div>
               </div>
             </div>
@@ -91,7 +96,7 @@ export default function HomePage() {
       <section className="features-section">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag">چرا من؟</span>
+            <span className="section-tag">{features.sectionTag}</span>
             <h2 className="display-medium">{features.sectionTitle}</h2>
             <p className="body-large section-subtitle">{features.sectionSubtitle}</p>
           </div>

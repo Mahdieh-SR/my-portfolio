@@ -4,9 +4,11 @@
 import { useState } from 'react';
 import { personalInfo } from '@/data/personal';
 import { contactContent } from '@/data/content';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ContactPage() {
-  const { hero, infoSection, form, contactMethods: methods, socialLinks: socials } = contactContent;
+  const { language } = useLanguage();
+  const { hero, infoSection, form, contactMethods: methods, socialLinks: socials } = contactContent[language];
 
   const [formData, setFormData]     = useState({ name: '', email: '', subject: '', message: '' });
   const [errors, setErrors]         = useState({});
@@ -16,7 +18,7 @@ export default function ContactPage() {
   const contactMethods = [
     { ...methods[0], value: personalInfo.email,    link: `mailto:${personalInfo.email}`              },
     { ...methods[1], value: personalInfo.phone,    link: `tel:${personalInfo.phone.replace(/\s/g,'')}` },
-    { ...methods[2], value: personalInfo.location, link: null                                         },
+    { ...methods[2], value: personalInfo.location[language], link: null                                },
   ];
 
   const socialLinks = [
@@ -112,7 +114,7 @@ export default function ContactPage() {
               </div>
               <div className="availability-content">
                 <h3 className="title-large">{infoSection.availabilityTitle}</h3>
-                <p className="body-medium">{personalInfo.availability.message}</p>
+                <p className="body-medium">{personalInfo.availability.message[language]}</p>
               </div>
             </div>
           </div>

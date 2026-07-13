@@ -3,9 +3,11 @@
 
 import { education, experience, skills, languages, certifications, awards } from '@/data/resume';
 import { resumeContent } from '@/data/content';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ResumePage() {
-  const { hero, sections, skillCategories, experience: expContent, education: eduContent } = resumeContent;
+  const { language } = useLanguage();
+  const { hero, sections, skillCategories, experience: expContent, education: eduContent } = resumeContent[language];
 
   return (
     <div className="resume-page">
@@ -37,10 +39,10 @@ export default function ResumePage() {
               <div key={index} className="experience-card">
                 <div className="exp-header">
                   <div className="exp-main-info">
-                    <h3 className="title-large">{exp.position}</h3>
+                    <h3 className="title-large">{exp[language].position}</h3>
                     <div className="company-info">
                       <span className="material-symbols-outlined">business</span>
-                      <span>{exp.company}</span>
+                      <span>{exp[language].company}</span>
                       {exp.current && (
                         <span className="current-badge">{expContent.currentBadge}</span>
                       )}
@@ -49,21 +51,21 @@ export default function ResumePage() {
                   <div className="exp-meta">
                     <div className="meta-item">
                       <span className="material-symbols-outlined">schedule</span>
-                      <span>{exp.startDate} - {exp.endDate}</span>
+                      <span>{exp.startDate[language]} - {exp.endDate[language]}</span>
                     </div>
                     <div className="meta-item">
                       <span className="material-symbols-outlined">location_on</span>
-                      <span>{exp.location}</span>
+                      <span>{exp.location[language]}</span>
                     </div>
                   </div>
                 </div>
 
-                <p className="body-large exp-description">{exp.description}</p>
+                <p className="body-large exp-description">{exp[language].description}</p>
 
                 <div className="responsibilities">
                   <h4 className="label-large">{expContent.responsibilitiesLabel}</h4>
                   <ul>
-                    {exp.responsibilities.map((resp, idx) => (
+                    {exp[language].responsibilities.map((resp, idx) => (
                       <li key={idx} className="body-medium">
                         <span className="material-symbols-outlined">check_circle</span>
                         {resp}
@@ -96,23 +98,23 @@ export default function ResumePage() {
                   <span className="material-symbols-outlined">school</span>
                 </div>
                 <div className="edu-content">
-                  <h3 className="title-large">{edu.degree}</h3>
+                  <h3 className="title-large">{edu[language].degree}</h3>
                   <div className="edu-details">
-                    <span className="label-large">{edu.field}</span>
+                    <span className="label-large">{edu[language].field}</span>
                     <span className="separator">•</span>
-                    <span className="body-medium">{edu.university}</span>
+                    <span className="body-medium">{edu.university[language]}</span>
                   </div>
                   <div className="edu-meta">
                     <div className="meta-item">
                       <span className="material-symbols-outlined">calendar_today</span>
-                      <span>{edu.startDate} - {edu.endDate}</span>
+                      <span>{edu.startDate[language]} - {edu.endDate[language]}</span>
                     </div>
                     <div className="meta-item">
                       <span className="material-symbols-outlined">star</span>
                       <span>{eduContent.gpaLabel} {edu.gpa}</span>
                     </div>
                   </div>
-                  <p className="body-medium">{edu.description}</p>
+                  <p className="body-medium">{edu[language].description}</p>
                 </div>
               </div>
             ))}
@@ -201,8 +203,8 @@ export default function ResumePage() {
               {languages.map((lang, index) => (
                 <div key={index} className="language-item">
                   <div className="lang-header">
-                    <span className="title-medium">{lang.name}</span>
-                    <span className="body-medium lang-level">{lang.level}</span>
+                    <span className="title-medium">{lang[language].name}</span>
+                    <span className="body-medium lang-level">{lang[language].level}</span>
                   </div>
                   <div className="lang-bar">
                     <div className="lang-progress" style={{width: `${lang.proficiency}%`}}></div>
