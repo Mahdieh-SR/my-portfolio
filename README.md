@@ -1,206 +1,105 @@
-# 🎨 پروژه پورتفولیوی شخصی
+# Personal Portfolio
 
-یک وب‌سایت پورتفولیوی مدرن و حرفه‌ای با Next.js 15، React 19 و Material Design 3
+A personal portfolio website built with Next.js 15 and React 19, designed around
+Material Design 3 with full right-to-left (RTL) support for Persian.
 
-## ✨ ویژگی‌ها
+**Live site:** [https://my-portfolio-production-f3ab.up.railway.app/]
 
-- 🎨 طراحی مدرن بر اساس Material Design 3
-- 📱 کاملاً واکنش‌گرا (Responsive) برای تمام دستگاه‌ها
-- ⚡ بهینه‌سازی شده برای عملکرد بالا
-- 🌐 پشتیبانی کامل از زبان فارسی با فونت‌های وزیرمتن و یکان
-- 🎭 انیمیشن‌های روان و جذاب
-- ♿ قابلیت دسترسی (Accessibility)
-- 🔍 بهینه‌سازی SEO
-- 🎯 UI/UX بهینه و کاربرپسند
+---
 
-## 🛠️ تکنولوژی‌های استفاده شده
+## Tech Stack
 
-- **Framework**: Next.js 15
-- **UI Library**: React 19
-- **Styling**: CSS-in-JS (Styled JSX)
-- **Design System**: Material Design 3
-- **Fonts**: Vazirmatn & Yekan
-- **Icons**: Material Symbols
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| UI Library | React 19 |
+| Styling | CSS-in-JS (Styled JSX) |
+| Design System | Material Design 3 |
+| Typography | Vazirmatn & Yekan |
+| Icons | Material Symbols |
 
-## 📦 نصب و راه‌اندازی
+---
 
-### پیش‌نیازها
+## Features
 
-- Node.js نسخه 18 یا بالاتر
-- npm یا yarn
+- **Material Design 3** foundation with a custom color and typography system
+- **Full RTL support** for Persian, with the Vazirmatn typeface
+- **Fully responsive** across mobile, tablet, and desktop
+- **Content separated from components** — all copy lives in `data/`, so the site
+  can be updated without touching a single component
+- **Dynamic project pages** generated per project via App Router routing
+- **Contact form** with complete client-side field validation
+- **SEO optimized** with proper metadata and semantic markup
+- **Accessible** markup and keyboard navigation
+- **Performance optimized** for fast loads
 
-### مراحل نصب
+---
 
-1. کلون کردن پروژه یا دانلود فایل‌ها
+## Screenshots
 
-2. نصب وابستگی‌ها:
-```bash
-npm install
-```
+<!-- Add 2-3 screenshots here. Upload images to the repo, then link them:
+![Homepage](./screenshots/home.png)
+![Projects page](./screenshots/projects.png)
+-->
 
-3. اجرای پروژه در حالت توسعه:
-```bash
-npm run dev
-```
+---
 
-4. باز کردن مرورگر و مراجعه به:
-```
-http://localhost:3000
-```
+## Architecture
 
-## 📁 ساختار پروژه
+The project is built around a clean separation between content and presentation:
 
 ```
 my-portfolio/
-├── app/                    # صفحات و route‌های اصلی
-│   ├── layout.js          # Layout اصلی
-│   ├── page.js            # صفحه اصلی (Home)
-│   ├── globals.css        # استایل‌های سراسری
-│   ├── about/             # صفحه درباره من
-│   │   └── page.js
-│   ├── resume/            # صفحه رزومه
-│   │   └── page.js
-│   ├── projects/          # صفحات پروژه‌ها
-│   │   ├── page.js
-│   │   └── [id]/
-│   │       └── page.js
-│   └── contact/           # صفحه تماس
-│       └── page.js
-├── components/            # کامپوننت‌های قابل استفاده مجدد
-│   ├── Navbar.js         # نوار ناوبری
-│   └── Footer.js         # فوتر
-├── data/                 # داده‌های استاتیک
-│   ├── personal.js       # اطلاعات شخصی
-│   ├── resume.js         # سوابق و تجربیات
-│   └── projects.js       # لیست پروژه‌ها
-├── utils/                # توابع کمکی
-│   └── helpers.js        # توابع utility
-└── public/               # فایل‌های عمومی
-    └── images/
-        └── projects/     # تصاویر پروژه‌ها
+├── app/              # Pages and routing (App Router)
+│   ├── about/
+│   ├── resume/
+│   ├── projects/     # Includes dynamic [id] routes per project
+│   └── contact/
+├── components/       # Reusable UI components
+├── data/             # All site content, separated from components
+│   ├── personal.js
+│   ├── resume.js
+│   └── projects.js
+├── utils/            # Helper functions
+└── public/images/    # Static assets
 ```
 
-## 🎨 سفارشی‌سازی
+Keeping every string and project entry in `data/` means the entire site can be
+rewritten or translated without editing any component logic — the approach that
+made adding a second language straightforward.
 
-### تغییر رنگ‌ها
+---
 
-رنگ‌های Material Design 3 در فایل `app/globals.css` تعریف شده‌اند:
+## Running Locally
 
-```css
-:root {
-  --md-sys-color-primary: #6750A4;
-  --md-sys-color-secondary: #625B71;
-  /* ... */
-}
+Requires Node.js 18 or higher.
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Mahdieh-SR/my-portfolio.git
+cd my-portfolio
+
+# 2. Install dependencies
+npm install
+
+# 3. Start the dev server
+npm run dev
 ```
 
-### ویرایش اطلاعات شخصی
+Then open [http://localhost:3000](http://localhost:3000).
 
-فایل `data/personal.js` را باز کنید و اطلاعات خود را ویرایش کنید:
-
-```javascript
-export const personalInfo = {
-  name: 'نام شما',
-  title: 'عنوان شغلی',
-  email: 'ایمیل شما',
-  // ...
-};
-```
-
-### اضافه کردن پروژه‌ها
-
-پروژه‌های خود را در فایل `data/projects.js` اضافه کنید:
-
-```javascript
-{
-  id: 'project-id',
-  title: 'عنوان پروژه',
-  shortDescription: 'توضیح کوتاه',
-  description: 'توضیح کامل',
-  category: 'وب',
-  technologies: ['React', 'Node.js'],
-  // ...
-}
-```
-
-### اضافه کردن تصاویر
-
-تصاویر پروژه‌های خود را در پوشه `public/images/projects/` قرار دهید.
-
-## 🚀 ساخت برای تولید (Production)
+To build for production:
 
 ```bash
 npm run build
 npm start
 ```
 
-## 📝 دستورات مفید
-
-- `npm run dev` - اجرای پروژه در حالت توسعه
-- `npm run build` - ساخت نسخه بهینه شده
-- `npm start` - اجرای نسخه تولید
-- `npm run lint` - بررسی کد با ESLint
-
-## 🌐 استقرار (Deployment)
-
-### Vercel (پیشنهادی)
-
-1. اکانت [Vercel](https://vercel.com) بسازید
-2. پروژه را به GitHub push کنید
-3. پروژه را در Vercel import کنید
-
-```bash
-# یا با Vercel CLI
-npm i -g vercel
-vercel
-```
-
-### Netlify
-
-```bash
-npm i -g netlify-cli
-npm run build
-netlify deploy --prod
-```
-
-## 📚 منابع یادگیری
-
-- [مستندات Next.js](https://nextjs.org/docs)
-- [مستندات React](https://react.dev)
-- [راهنمای Material Design 3](https://m3.material.io)
-- [فونت وزیرمتن](https://github.com/rastikerdar/vazirmatn)
-
-## ✅ چک‌لیست قبل از استقرار
-
-- [ ] تمام اطلاعات شخصی ویرایش شده
-- [ ] تصاویر پروژه‌ها اضافه شده
-- [ ] لینک‌های شبکه‌های اجتماعی به‌روز شده
-- [ ] تست در مرورگرهای مختلف
-- [ ] بررسی عملکرد با Lighthouse
-- [ ] SEO بهینه‌سازی شده
-
-## 🤝 مشارکت
-
-برای مشارکت در این پروژه:
-
-1. Fork کنید
-2. یک branch جدید بسازید
-3. تغییرات را commit کنید
-4. Push کنید
-5. یک Pull Request باز کنید
-
-## 📄 لایسنس
-
-این پروژه تحت لایسنس MIT منتشر شده است.
-
-## 📞 پشتیبانی
-
-برای هرگونه سوال یا مشکل:
-- ایمیل: info@example.com
-- GitHub Issues: [لینک]
-
 ---
 
-ساخته شده با ❤️ و Next.js
+## About
 
-**نکته**: این یک پروژه نمونه است. لطفاً قبل از استفاده در محیط تولید، تمام اطلاعات را سفارشی‌سازی کنید.
+Built by **Madi** — a full-stack developer working with Next.js, TypeScript,
+and PostgreSQL.
+
+[GitHub](https://github.com/Mahdieh-SR) · [Email](mailto:mahdiehsrwork@gmail.com)
